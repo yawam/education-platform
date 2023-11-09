@@ -5,6 +5,7 @@ import axios from "axios"; // used for form methods.. post get put and the like
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import {
   Form,
   FormControl,
@@ -36,13 +37,12 @@ const CreatePage = () => {
   const { isSubmitting, isValid } = form.formState;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.post("/api/course", values);
+      const response = await axios.post("/api/courses", values);
       router.push(`/teacher/courses/${response.data.id}`);
-      console.log("Iworked")
-    } catch{
-      console.log("Something went wrong");
+      toast.success("Course Created");
+    } catch {
+      toast.error("Something went wrong");
     }
-    
   };
 
   return (
@@ -84,9 +84,9 @@ const CreatePage = () => {
                   Cancel
                 </Button>
               </Link>
-                <Button type="submit" disabled={!isValid || isSubmitting}>
-                  Continue
-                </Button>
+              <Button type="submit" disabled={!isValid || isSubmitting}>
+                Continue
+              </Button>
             </div>
           </form>
         </Form>
