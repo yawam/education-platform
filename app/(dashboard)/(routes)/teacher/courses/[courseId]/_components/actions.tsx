@@ -2,6 +2,7 @@
 
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
+import { useConfettiStore } from "@/hooks/use-confetti-store";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -11,18 +12,16 @@ import toast from "react-hot-toast";
 interface ActionsProps {
   disabled: boolean;
   courseId: string;
-  chapterId ?: string;
   isPublished: boolean;
 }
 
 export const Actions = ({
   disabled,
   courseId,
-  chapterId,
   isPublished,
 }: ActionsProps) => {
   const router = useRouter();
-
+  const confetti = useConfettiStore()
   const [isLoading, setIsLoading] = useState(false);
 
   const onClick = async () => {
@@ -41,6 +40,7 @@ export const Actions = ({
           `/api/courses/${courseId}/publish`
         );
         toast.success("Course published");
+        confetti.onOpen();
       }
 
       router.refresh();
@@ -56,7 +56,7 @@ export const Actions = ({
       setIsLoading(true);
       await axios.delete(`/api/courses/${courseId}`);
       toast.success("Chapter deleted");
-      //router.refresh();
+      router.refresh();
       router.push(`/teacher/courses`);
     } catch (error) {
       toast.error("Something went wrong");

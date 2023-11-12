@@ -3,12 +3,13 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-const { Video } = new Mux(process.env.MUX_TOKEN_ID!, process.env.MUX_TOKEN_ID!);
+const { Video } = new Mux(process.env.MUX_TOKEN_ID!, process.env.MUX_TOKEN_SECRET!);
 
 export async function DELETE(
   req: Request,
   { params }: { params: { courseId: string } }
 ) {
+  console.log(params.courseId)
   try {
     const { userId } = auth();
     if (!userId) {
